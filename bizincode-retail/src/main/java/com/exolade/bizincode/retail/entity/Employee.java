@@ -7,7 +7,6 @@ package com.exolade.bizincode.retail.entity;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -21,13 +20,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.exolade.bizincode.retail.type.EmployeeType;
-import com.exolade.bizincode.retail.type.Position;
+import com.exolade.bizincode.retail.misc.EmployeeType;
+import com.exolade.bizincode.retail.misc.EmployeePosition;
 
 @Entity
 @Table(name = "Employee")
@@ -37,24 +37,23 @@ public class Employee{
 	private double salary;
 	private int hours;
 	private EmployeeType type;
+	private EmployeePosition position;
 	private Date start_date;
 	private Date end_date;
 	private Employee manager;
+	private EmployeeDetail detail;
 	private Set<Employee> subordinates = new HashSet<Employee>();
-
-	/////////////////////////////////////work-in-process//////////////////////////////////////////
-	private List<Position> position;
 
 	public Employee() { }
 
 	public Employee(final double salary, final int hour, final EmployeeType type,
-			final Date startD, final Date endD, final Employee mnger, 
-			final List<Position> pos) {
+			/*final Date startD, final Date endD,*/ final Employee mnger, 
+			final EmployeePosition pos) {
 		this.salary = salary;
 		this.hours = hour;
 		this.type = type;
-		this.start_date = startD;
-		this.end_date = endD;
+		//this.start_date = startD;
+		//this.end_date = endD;
 		this.manager = mnger;
 		this.position = pos;
 	}
@@ -63,6 +62,12 @@ public class Employee{
 	@PrePersist
 	protected void onCreate() {
 		start_date = new Date();
+	}
+	
+	@OneToOne(mappedBy = "employee", cascade = {CascadeType.ALL})
+	//@JoinColumn(name = "em_detail")
+	public EmployeeDetail getDetail() {
+		return detail;
 	}
 
 	//Employee-Manager relationship (self-join)
@@ -84,7 +89,9 @@ public class Employee{
 		return type;
 	}
 
-	public List<Position> getPosition() {
+	@Column(name = "EM_POSITION")
+	@Enumerated(EnumType.STRING)
+	public EmployeePosition getPosition() {
 		return position;
 	}
 
@@ -96,7 +103,7 @@ public class Employee{
 
 	@Column(name = "END_DATE")
 	@Temporal(TemporalType.DATE)
-	public Date getEnd_date() {
+	public Date getEndDate() {
 		if (end_date != null) { return end_date;}
 		else { return start_date; }
 	}
@@ -125,15 +132,15 @@ public class Employee{
 		hours = newHours;
 	}
 
-	public void setEmployeeType(final EmployeeType newET) {
+	public void setEType(final EmployeeType newET) {
 		type = newET;
 	}
 
-	public void setPosition(final List<Position> newPos) {
+	public void setPosition(final EmployeePosition newPos) {
 		position = newPos;
 	}
 
-	public void setEnd_date(Date end_date) {
+	public void setEndDate(Date end_date) {
 		this.end_date = end_date;
 	}
 
@@ -144,9 +151,17 @@ public class Employee{
 	public void setManager(Employee manager) {
 		this.manager = manager;
 	}
+	
+	public void setDetail(EmployeeDetail detail) {
+		this.detail = detail;
+	}
 
 	public void setSubordinates(Set<Employee> subordinates) {
 		this.subordinates = subordinates;
+	}
+	
+	private void setStartDate(Date startDate) {
+		this.start_date = startDate;
 	}
 	
 	public void add1Hour() {

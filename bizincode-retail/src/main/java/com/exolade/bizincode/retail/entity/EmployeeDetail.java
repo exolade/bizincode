@@ -18,10 +18,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "EMPLOYEE_DETAIL")
+@Table(name = "EmployeeDetail")
 public class EmployeeDetail{
 	
-	private int id;
+	private int em_id;
 	private Employee employee;
 	private int age;
 	private int phone_num;
@@ -41,14 +41,14 @@ public class EmployeeDetail{
 	}
 	
 	@Id @GeneratedValue(generator = "generator")
-	@Column(name = "EM_ID", unique = true, nullable = false)
+	@Column(name = "EM_ID")
 	@GenericGenerator(name = "generator", strategy = "foreign", 
 					  parameters = @Parameter(name = "property", value = "employee"))
 	public int getId() {
-		return id;
+		return em_id;
 	}
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "EM_ID")
 	public Employee getEmployee() {
 		return employee;
@@ -96,7 +96,7 @@ public class EmployeeDetail{
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.em_id = id;
 	}
 	
 	public void setGender(char gender) {

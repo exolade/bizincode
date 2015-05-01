@@ -14,7 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.exolade.bizincode.retail.type.ItemType;
+import com.exolade.bizincode.retail.misc.MerchandiseType;
+
 
 @Entity
 @Table(name = "Merchandise")
@@ -22,9 +23,18 @@ public class Merchandise{
 	private int id;
 	private String name;
 	private double price;
-	private ItemType type;
+	private MerchandiseType type;
 	//number of merchandise available for sell
 	private int quantity;
+	
+	public Merchandise() { }
+	
+	public Merchandise(String name, double price, MerchandiseType type, int num) {
+		this.name = name;
+		this.price = price;
+		this.type = type;
+		this.quantity = num;
+	}
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ITEM_ID")
@@ -49,11 +59,11 @@ public class Merchandise{
 	
 	@Column(name = "ITEM_TYPE")
 	@Enumerated(EnumType.STRING)
-	public ItemType getType() {
+	public MerchandiseType getType() {
 		return type;
 	}
 	
-	public void setType(ItemType type) {
+	public void setType(MerchandiseType type) {
 		this.type = type;
 	}
 	

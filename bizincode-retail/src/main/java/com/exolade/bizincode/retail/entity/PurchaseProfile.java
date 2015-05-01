@@ -45,6 +45,10 @@ public class PurchaseProfile {
 		this.customer_id = id;
 	}
 	
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+	
 	public void generate() {
 		
 		
