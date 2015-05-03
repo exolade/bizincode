@@ -4,8 +4,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class EmfProvider {
-	private static final String PERSISTENT_UNIT = "bizincode-retail";
+	private static final String APP_P_UNIT = "bizincode-retail";
+	private static final String TEST_P_UNIT = "bizincode-retail-test";
 	private static final EmfProvider provider = new EmfProvider();
+	private static boolean test = false;
 	private EntityManagerFactory emf;
 
 	public EmfProvider getInstanceOf() {
@@ -13,10 +15,16 @@ public class EmfProvider {
 	}
 
 	public EntityManagerFactory getEntityManagerFactory() {
-		if(emf == null) {
-			emf = Persistence.createEntityManagerFactory(PERSISTENT_UNIT);
+		if(emf == null && !test) {
+			emf = Persistence.createEntityManagerFactory(APP_P_UNIT);
+		} else if (emf == null && test) {
+			emf = Persistence.createEntityManagerFactory(TEST_P_UNIT);
 		}
 		return emf;
+	}
+	
+	public void setTest(boolean test) {
+		this.test = test;
 	}
 
 	public void closeEmf() {

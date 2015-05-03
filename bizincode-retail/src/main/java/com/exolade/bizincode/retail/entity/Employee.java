@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 import com.exolade.bizincode.retail.misc.EmployeeType;
 import com.exolade.bizincode.retail.misc.EmployeePosition;
 
@@ -64,7 +65,7 @@ public class Employee{
 		start_date = new Date();
 	}
 	
-	@OneToOne(mappedBy = "employee", cascade = {CascadeType.ALL})
+	@OneToOne(mappedBy = "employee", cascade = {CascadeType.ALL}, orphanRemoval=true)
 	//@JoinColumn(name = "em_detail")
 	public EmployeeDetail getDetail() {
 		return detail;
@@ -166,5 +167,13 @@ public class Employee{
 	
 	public void add1Hour() {
 		hours++;
+	}
+	
+	public void addSubordinate(Employee sub) {
+		subordinates.add(sub);
+	}
+	
+	public void removeSubordinate(Employee sub) {
+		subordinates.remove(sub);
 	}
 } //class
