@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,6 +21,12 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "EmployeeDetail")
+@NamedQueries({
+    @NamedQuery(name="EmployeeDetail.findAll",
+                query="SELECT d FROM EmployeeDetail d"),
+    @NamedQuery(name="EmployeeDetail.findById",
+                query="SELECT d FROM EmployeeDetail d WHERE d.id = :id"),
+})
 public class EmployeeDetail{
 	
 	private int em_id;

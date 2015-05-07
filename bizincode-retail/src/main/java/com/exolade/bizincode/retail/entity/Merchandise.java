@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.exolade.bizincode.retail.misc.MerchandiseType;
@@ -19,6 +21,16 @@ import com.exolade.bizincode.retail.misc.MerchandiseType;
 
 @Entity
 @Table(name = "Merchandise")
+@NamedQueries({
+    @NamedQuery(name="Merchandise.findAll",
+                query="SELECT m FROM Merchandise m"),
+    @NamedQuery(name="Merchandise.findById",
+                query="SELECT m FROM Merchandise m WHERE m.id = :id"),
+    @NamedQuery(name="Merchandise.findByName",
+                query="SELECT m FROM Merchandise m WHERE m.name = :name"),
+    @NamedQuery(name="Merchandise.findByType",
+                query="SELECT m FROM Merchandise m WHERE m.type = :type"),
+})
 public class Merchandise{
 	private int id;
 	private String name;

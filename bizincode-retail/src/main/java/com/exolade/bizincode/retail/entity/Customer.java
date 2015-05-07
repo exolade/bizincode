@@ -11,16 +11,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Customer")
+@NamedQueries({
+    @NamedQuery(name="Customer.findAll",
+                query="SELECT c FROM Customer c"),
+    @NamedQuery(name="Customer.findById",
+                query="SELECT c FROM Customer c WHERE c.id = :id"),
+    @NamedQuery(name="Customer.findByName",
+                query="SELECT c FROM Customer c WHERE c.name = :name"),
+    @NamedQuery(name="Customer.findByAge",
+                query="SELECT c FROM Customer c WHERE c.age = :age"),
+    @NamedQuery(name="Customer.findByAddress",
+                query="SELECT c FROM Customer c WHERE c.address = :address"),
+    @NamedQuery(name="Customer.findByGender",
+                query="SELECT c FROM Customer c WHERE c.gender = :gender"),
+})
 public class Customer{
 	
 	private int id;
 	private int age;
-	private int phone_num;
+	private int phone;
 	private String name;
 	private String address;
 	private char gender;
@@ -28,11 +44,11 @@ public class Customer{
 	
 	public Customer() { }
 	
-	public Customer(final PurchaseProfile prof, final int age, final int phone, 
+	public Customer(final int age, final int phone, 
 					final String name, final String add, final char gender) {
-		this.profile = prof;
+		//this.profile = prof;
 		this.age = age;
-		this.phone_num = phone;
+		this.phone = phone;
 		this.name = name;
 		this.address = add;
 		this.gender = gender;
@@ -71,7 +87,7 @@ public class Customer{
 	
 	@Column(name = "PHONE", nullable = false)
 	public int getPhoneNum() {
-		return phone_num;
+		return phone;
 	}
 	
 	public void setGender(char gender) {
@@ -91,7 +107,7 @@ public class Customer{
 	}
 	
 	public void setPhoneNum(final int newPhone) {
-		phone_num = newPhone;
+		phone = newPhone;
 	}
 
 	public void setId(int id) {

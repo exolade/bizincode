@@ -41,6 +41,8 @@ import com.exolade.bizincode.retail.misc.EmployeePosition;
                 query="SELECT e FROM Employee e"),
     @NamedQuery(name="Employee.findById",
                 query="SELECT e FROM Employee e WHERE e.id = :id"),
+    @NamedQuery(name="Employee.findByPosition",
+                query="SELECT e FROM Employee e WHERE e.position = :position"),
 })
 public class Employee{
 

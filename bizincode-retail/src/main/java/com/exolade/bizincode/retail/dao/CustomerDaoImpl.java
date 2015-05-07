@@ -16,11 +16,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+
+
 import com.exolade.bizincode.retail.EmfProvider;
 import com.exolade.bizincode.retail.entity.Customer;
 
-public class CustomerDaoImpl implements AbstractDao {
-
+public class CustomerDaoImpl implements AbstractDao{
 	private EntityManagerFactory emf;
 	private EntityManager em;
 
@@ -36,15 +37,18 @@ public class CustomerDaoImpl implements AbstractDao {
 	}
 
 	@Override
-	public void refresh() {
+	/**
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#refreshDB()}
+	 */
+	public void refreshDB() {
+		em.getTransaction().begin();
 		em.flush();
 	}
-
-	/**
-	 * Saves entry/entries into DB. Batch-storing is also considered.
-	 * @param list is the entities to be save to the database.
-	 */
+	
 	@Override
+	/**
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#save(List<Object> t)}
+	 */
 	public boolean save(List<Object> list) {
 		boolean saved = true;
 		if (list.isEmpty()) {
@@ -72,17 +76,73 @@ public class CustomerDaoImpl implements AbstractDao {
 		}
 		return saved;
 	}
+	
+	@Override
+	public List<Object> getAll() {
+		Query q = em.createNamedQuery("Customer.findAll");
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	@Override
+	public Object getById(int id) {
+		Query q = em.createNamedQuery("Customer.findById");
+		q.setParameter("id", id);
+		try {
+			return q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	public List<Object> getByAge(int age) {
+		Query q = em.createNamedQuery("Customer.findByAge");
+		q.setParameter("age", age);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}	
+	
+	public List<Object> getByName(String name) {
+		Query q = em.createNamedQuery("Customer.findByName");
+		q.setParameter("name", name);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	public List<Object> getByAddress(String address) {
+		Query q = em.createNamedQuery("Customer.findByAddress");
+		q.setParameter("address", address);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	public List<Object> getByGender(char gender) {
+		Query q = em.createNamedQuery("Customer.findByGender");
+		q.setParameter("gender", gender);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 	/**
-	 * Finds and return results from query (single or multiple result are all included in list).
-	 * @param query is a custom query passed from client class 
-	 * 		  (ie. "SELECT u FROM User u WHERE u.Login = :login").
-	 * @param tag is the string associate with specific conditions in the query (ie. :login).
-	 * @param condition is the object specifying conditions in the query (ie. :login).
-	 * @return resulting entry/entries matching query specification.
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#getByQuery(String query, List<String> tag, List<Object> t)}
 	 */
 	@Override
-	public List<Object> get(String query, List<String> tag, List<Object> condition) {
+	public List<Object> getByQuery(String query, List<String> tag, List<Object> condition) {
 		if (tag.size() != condition.size()) {
 			return null;
 		}
@@ -99,18 +159,26 @@ public class CustomerDaoImpl implements AbstractDao {
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean findById(int id) {
+		boolean found = true;
+		Query q = em.createNamedQuery("Customer.findById");
+		q.setParameter("id", id);
+		try{
+			if(q.getSingleResult() != null) return found;
+		
+		} catch (NoResultException e) {	
+			found = !found;
+		}
+		return found;
+	}
 
 	/**
-	 * Finds an entry in the DB with a custom query (may find multiple occurrences, but will
-	 * only take into account whether an entry is found or not).
-	 * @param query is a custom query passed from client class 
-	 * 		  (ie. "SELECT u FROM User u WHERE u.Login = :login").
-	 * @param tag is the string associate with specific conditions in the query (ie. :login).
-	 * @param condition is the object specifying conditions in the query (ie. :login).
-	 * @return whether an entry (or multiple) has been found via the query.
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#findByQuery(String query, List<String> tag, List<Object> t)}
 	 */
 	@Override
-	public boolean find(String query, List<String> tag, List<Object> condition) {
+	public boolean findByQuery(String query, List<String> tag, List<Object> condition) {
 		boolean result = false;
 		if (tag.size() != condition.size()) {
 			return result;
@@ -128,31 +196,30 @@ public class CustomerDaoImpl implements AbstractDao {
 		}
 		return result;
 	}
-
-/*@Override
-	public boolean deleteItem(List<Object> list) {
-		//em.getTransaction().begin();
-		boolean deleted = true;
-		try {
-			for (int i = 0; i < list.size(); i++) {
-				em.remove(list.get(i));
-			}
-			em.getTransaction().commit();
-		} catch (PersistenceException e) {
-			if (em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
-				deleted = false;
-			}
-		} 
-		finally {
-			return deleted;
-		}
-	}*/
-
-	@Override
-	public int deleteSelected(String query, List<String> tag, List<Object> condition) {
+	
+	@Override 
+	public int deleteById(int id) {
 		em.getTransaction().begin();
-		List<Object> result = get(query, tag, condition);
+		Customer tmp = (Customer) getById(id);
+		if (tmp == null) {
+			return 0;
+		}
+		tmp.setProfile(null);
+		em.remove(tmp);
+		em.getTransaction().commit();
+		return 1;
+	}
+
+	/**
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#deleteByQuery(String query, List<String> tag, List<Object> t)}
+	 */
+	@Override
+	public int deleteByQuery(String query, List<String> tag, List<Object> condition) {
+		em.getTransaction().begin();
+		List<Object> result = getByQuery(query, tag, condition);
+		if (result == null || result.size() == 0) {
+			return 0;
+		}
 		for (int i = 0; i < result.size(); i++) {
 			Customer tmp = (Customer) result.get(i);
 			tmp.setProfile(null);
@@ -163,12 +230,15 @@ public class CustomerDaoImpl implements AbstractDao {
 	}
 	
 	@Override
-	public void update(Object obj) {
+	public void updateThis(Object obj) {
 		em.getTransaction().begin();
 		em.merge(obj);
 		em.getTransaction().commit();
 	}
 	
+	/**
+	 * {@link com.exolade.bizincode.retail.dao.AbstractDao#rollback()}
+	 */
 	@Override
 	public void rollback() {
 		em.getTransaction().begin();
@@ -180,4 +250,3 @@ public class CustomerDaoImpl implements AbstractDao {
 		em.close();
 	}
 } //class
-

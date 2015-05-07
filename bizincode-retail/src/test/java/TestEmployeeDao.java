@@ -15,14 +15,10 @@ import org.junit.Test;
 
 import com.exolade.bizincode.retail.EmfProvider;
 import com.exolade.bizincode.retail.dao.EmployeeDaoImpl;
-import com.exolade.bizincode.retail.entity.Customer;
 import com.exolade.bizincode.retail.entity.Employee;
 import com.exolade.bizincode.retail.entity.EmployeeDetail;
-import com.exolade.bizincode.retail.entity.Merchandise;
-import com.exolade.bizincode.retail.entity.PurchaseProfile;
 import com.exolade.bizincode.retail.misc.EmployeePosition;
 import com.exolade.bizincode.retail.misc.EmployeeType;
-import com.exolade.bizincode.retail.misc.MerchandiseType;
 
 public class TestEmployeeDao {
 	private static EmfProvider provider;
@@ -63,6 +59,7 @@ public class TestEmployeeDao {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		dao.rollback();
 		items = null;
 		dao.closeDao();
 		provider.closeEmf();
@@ -79,7 +76,7 @@ public class TestEmployeeDao {
 	}
 	
 	@Test
-	public void testFindAdd() {
+	public void testQueryFindAdd() {
 		dao.save(items);
 		
 		String q = "SELECT e FROM Employee e WHERE e.position = :pos";
@@ -89,11 +86,11 @@ public class TestEmployeeDao {
 		List<Object> condition = new ArrayList<>();
 		condition.add(EmployeePosition.MANAGER);
 		
-		assertEquals(true, dao.find(q, tag, condition));
+		assertEquals(true, dao.findByQuery(q, tag, condition));
 	}
 	
 	@Test
-	public void testGet() {
+	public void testQueryGet() {
 		String q = "SELECT e FROM Employee e WHERE e.position = :pos";
 		List<String> tag = new ArrayList<>();
 		tag.add("pos");
@@ -101,7 +98,7 @@ public class TestEmployeeDao {
 		List<Object> condition = new ArrayList<>();
 		condition.add(EmployeePosition.MANAGER);
 		
-		List<Object> result = dao.get(q, tag, condition);
+		List<Object> result = dao.getByQuery(q, tag, condition);
 		Employee retrieved = (Employee) result.get(0); 
 		Employee original = (Employee) items.get(0);
 		
@@ -110,12 +107,11 @@ public class TestEmployeeDao {
 		assertEquals(original.getHours(), retrieved.getHours());
 		assertEquals(original.getEType(), retrieved.getEType());
 		assertEquals(original.getPosition(), retrieved.getPosition());
-		assertEquals(original.getStartDate(), retrieved.getStartDate());
 	}
 	
 	@Test
-	public void testDelete() {
-		String q = "SELECT e FROM Employee AS e INNER JOIN e.detail AS d WHERE d.name = :name AND e.position = :pos";
+	public void testQueryDelete() {
+		String q = "SELECT e FROM Employee AS e JOIN e.detail AS d WHERE d.name = :name AND e.position = :pos";
 		List<String> tag = new ArrayList<>();
 		tag.add("pos");
 		tag.add("name");
@@ -124,14 +120,14 @@ public class TestEmployeeDao {
 		condition.add(EmployeePosition.MANAGER);
 		condition.add("John Doe");
 		
-		int r = dao.deleteSelected(q, tag, condition);
+		int r = dao.deleteByQuery(q, tag, condition);
 		System.out.println("SLATED FOR DELETE: " + r);
-		assertEquals(false, dao.find(q, tag, condition));
+		assertEquals(false, dao.findByQuery(q, tag, condition));
 	}
 	
 	@Test
-	public void testUpdate() {
-		String q = "SELECT e FROM Employee AS e INNER JOIN e.detail AS d WHERE d.name = :name AND e.position = :pos";
+	public void testQueryUpdate() {
+		String q = "SELECT e FROM Employee AS e JOIN e.detail AS d WHERE d.name = :name AND e.position = :pos";
 		List<String> tag = new ArrayList<>();
 		tag.add("pos");
 		tag.add("name");
@@ -144,11 +140,66 @@ public class TestEmployeeDao {
 		condition2.add(EmployeePosition.MANAGER);
 		condition2.add("Josh2");
 		
-		List<Object> result = dao.get(q, tag, condition);
+		List<Object> result = dao.getByQuery(q, tag, condition);
 		Employee tmp = (Employee) result.get(0);
 		tmp.getDetail().setName("Josh2");
-		dao.update(tmp);
+		dao.updateThis(tmp);
 		
-		assertEquals(true, dao.find(q, tag, condition2));
+		assertEquals(true, dao.findByQuery(q, tag, condition2));
+	}
+	
+	@Test
+	public void testGetByID() {
+		Employee originalStaff = (Employee) items.get(2);
+		Employee result = (Employee) dao.getById(originalStaff.getId());
+		assertEquals(originalStaff.getId(), result.getId());
+		assertEquals(originalStaff.getPosition(), result.getPosition());
+		assertEquals(originalStaff.getEType(), result.getEType());
+	}
+	
+	@Test
+	public void testFindById() {
+		Employee originalStaff = (Employee) items.get(2);
+		assertTrue(dao.findById(originalStaff.getId()));
+	}
+	
+	/**
+	 * testDeleteFindById() and testGetAll() cannot be run together at the same time
+	 * as delete affects retrieved results despite roll back after each test (WIP).
+	 * However, separately the tests will pass along with others.
+	 */
+/*	@Test
+	public void testDeleteFindById() {
+		Employee originalStaff = (Employee) items.get(2);
+		dao.deleteById(originalStaff.getId());
+		assertEquals(false, dao.findById(originalStaff.getId()));
+	}*/
+	
+	@Test
+	public void testGetAll() {
+		List<Object> retrieved = dao.getAll();
+		List<Employee> original = new ArrayList<>();
+		for (int i = 0; i < items.size(); i++) {
+			if (items.get(i) instanceof Employee) {
+				original.add((Employee)items.get(i));
+			}
+		}
+		
+		assertEquals(original.size(), retrieved.size());
+		
+		boolean getAll = false;
+		for (int i = 0; i < original.size(); i++) {
+			Employee origin = original.get(i);
+			getAll = false;
+			for (int j = 0; j < retrieved.size(); j++) {
+				Employee result = (Employee) retrieved.get(j);
+				if (origin.getId() == result.getId()) {
+					getAll = true;
+					break;
+				}
+				
+			}
+		}
+		assertEquals(true, getAll);
 	}
 }

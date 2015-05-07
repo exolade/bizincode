@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,6 +24,10 @@ import com.exolade.bizincode.retail.entity.Customer;
 
 @Entity
 @Table(name = "Purchase_Profile")
+@NamedQueries({
+    @NamedQuery(name="Purchase_Profile.findAll",
+                query="SELECT p FROM PurchaseProfile p"),
+})
 public class PurchaseProfile {
 	
 	private int customer_id;
