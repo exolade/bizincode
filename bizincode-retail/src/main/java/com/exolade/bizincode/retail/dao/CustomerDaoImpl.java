@@ -36,7 +36,7 @@ public class CustomerDaoImpl implements AbstractDao {
 	}
 
 	@Override
-	public void updateAll() {
+	public void refresh() {
 		em.flush();
 	}
 
@@ -129,7 +129,7 @@ public class CustomerDaoImpl implements AbstractDao {
 		return result;
 	}
 
-	@Override
+/*@Override
 	public boolean deleteItem(List<Object> list) {
 		//em.getTransaction().begin();
 		boolean deleted = true;
@@ -147,7 +147,7 @@ public class CustomerDaoImpl implements AbstractDao {
 		finally {
 			return deleted;
 		}
-	}
+	}*/
 
 	@Override
 	public int deleteSelected(String query, List<String> tag, List<Object> condition) {
@@ -160,6 +160,13 @@ public class CustomerDaoImpl implements AbstractDao {
 		}
 		em.getTransaction().commit();
 		return result.size();
+	}
+	
+	@Override
+	public void update(Object obj) {
+		em.getTransaction().begin();
+		em.merge(obj);
+		em.getTransaction().commit();
 	}
 	
 	@Override

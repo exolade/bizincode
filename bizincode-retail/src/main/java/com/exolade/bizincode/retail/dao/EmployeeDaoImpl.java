@@ -37,8 +37,8 @@ public class EmployeeDaoImpl implements AbstractDao{
 	}
 
 	@Override
-	public void updateAll() {
-		em.getTransaction().begin();
+	public void refresh() {
+		//em.getTransaction().begin();
 		em.flush();
 	}
 	
@@ -131,7 +131,7 @@ public class EmployeeDaoImpl implements AbstractDao{
 		return result;
 	}
 
-	@Override
+/*	@Override
 	public boolean deleteItem(List<Object> list) {
 		//em.getTransaction().begin();
 		boolean deleted = true;
@@ -149,14 +149,13 @@ public class EmployeeDaoImpl implements AbstractDao{
 		finally {
 			return deleted;
 		}
-	}
+	}*/
 
 	@Override
 	public int deleteSelected(String query, List<String> tag, List<Object> condition) {
 		em.getTransaction().begin();
 		List<Object> result = get(query, tag, condition);
 		if (result == null || result.size() == 0) {
-			System.out.println("can't find anything to delete");
 			return 0;
 		}
 		for (int i = 0; i < result.size(); i++) {
@@ -172,6 +171,13 @@ public class EmployeeDaoImpl implements AbstractDao{
 		}
 		em.getTransaction().commit();
 		return result.size();
+	}
+	
+	@Override
+	public void update(Object obj) {
+		em.getTransaction().begin();
+		em.merge(obj);
+		em.getTransaction().commit();
 	}
 	
 	@Override

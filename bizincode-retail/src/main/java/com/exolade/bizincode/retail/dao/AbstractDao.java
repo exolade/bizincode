@@ -7,12 +7,13 @@ import java.util.List;
 
 
 public interface AbstractDao {
-	void updateAll();
+	void refresh();
 	boolean save(List<Object> t);
 	List<Object> get(String query, List<String> tag, List<Object> t);
 	boolean find(String query, List<String> tag, List<Object> t);
 	int deleteSelected(String query, List<String> tag, List<Object> t);
-	boolean deleteItem(List<Object> t);
+	//boolean deleteItem(List<Object> t);
+	void update(Object o);
 	void closeDao();
 	void rollback();
 }

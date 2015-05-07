@@ -131,33 +131,24 @@ public class TestEmployeeDao {
 	
 	@Test
 	public void testUpdate() {
-		String q = "UPDATE EmployeeDetail AS d SET d.name = :name WHERE d.id = (SELECT e.id FROM Employee AS e WHERE d.age = :age AND e.salary = :salary)";
+		String q = "SELECT e FROM Employee AS e INNER JOIN e.detail AS d WHERE d.name = :name AND e.position = :pos";
 		List<String> tag = new ArrayList<>();
-		tag.add("age");
+		tag.add("pos");
 		tag.add("name");
-		tag.add("salary");
 		
 		List<Object> condition = new ArrayList<>();
-		condition.add(40);
-		condition.add("Josh2");
-		condition.add(35.0);
-		
-		List<Object> result = dao.get(q, tag, condition);
-		Employee retrieved = (Employee) result.get(0);
-		
-		/*retrieved.getDetail().setName("Josh2");
-		
-		String q2 = "SELECT d.name FROM EmployeeDetail AS d INNER JOIN d.employee AS e WHERE d.name = :name AND e.position = :pos";
-		List<String> tag2 = new ArrayList<>();
-		tag2.add("pos");
-		tag2.add("name");
+		condition.add(EmployeePosition.MANAGER);
+		condition.add("Josh");
 		
 		List<Object> condition2 = new ArrayList<>();
 		condition2.add(EmployeePosition.MANAGER);
-		condition2.add("Josh2");*/
+		condition2.add("Josh2");
 		
-		//retrieved = (Employee) dao.get(q, tag, condition2);
-		assertEquals(true, dao.find(q, tag, condition));
+		List<Object> result = dao.get(q, tag, condition);
+		Employee tmp = (Employee) result.get(0);
+		tmp.getDetail().setName("Josh2");
+		dao.update(tmp);
 		
+		assertEquals(true, dao.find(q, tag, condition2));
 	}
 }

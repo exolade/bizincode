@@ -19,6 +19,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -27,11 +29,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 
+
+
 import com.exolade.bizincode.retail.misc.EmployeeType;
 import com.exolade.bizincode.retail.misc.EmployeePosition;
 
 @Entity
 @Table(name = "Employee")
+@NamedQueries({
+    @NamedQuery(name="Employee.findAll",
+                query="SELECT e FROM Employee e"),
+    @NamedQuery(name="Employee.findById",
+                query="SELECT e FROM Employee e WHERE e.id = :id"),
+})
 public class Employee{
 
 	private int em_id;
