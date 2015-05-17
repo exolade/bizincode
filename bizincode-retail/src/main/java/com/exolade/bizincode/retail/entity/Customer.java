@@ -40,13 +40,12 @@ public class Customer{
 	private String name;
 	private String address;
 	private char gender;
-	private PurchaseProfile profile;
+	private PurchaseHistory history;
 	
 	public Customer() { }
 	
 	public Customer(final int age, final int phone, 
 					final String name, final String add, final char gender) {
-		//this.profile = prof;
 		this.age = age;
 		this.phone = phone;
 		this.name = name;
@@ -55,8 +54,8 @@ public class Customer{
 	}
 	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
-	public PurchaseProfile getProfile() {
-		return profile;
+	public PurchaseHistory getProfile() {
+		return history;
 	}
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -114,8 +113,8 @@ public class Customer{
 		this.id = id;
 	}
 	
-	public void setProfile(final PurchaseProfile newProfile) {
-		profile = newProfile;
+	public void setProfile(final PurchaseHistory newProfile) {
+		history = newProfile;
 	}
 	
 } //class

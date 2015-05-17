@@ -26,9 +26,9 @@ import com.exolade.bizincode.retail.entity.Customer;
 @Table(name = "Purchase_Profile")
 @NamedQueries({
     @NamedQuery(name="Purchase_Profile.findAll",
-                query="SELECT p FROM PurchaseProfile p"),
+                query="SELECT p FROM PurchaseHistory p"),
 })
-public class PurchaseProfile {
+public class PurchaseHistory {
 	
 	private int customer_id;
 	private Customer customer;

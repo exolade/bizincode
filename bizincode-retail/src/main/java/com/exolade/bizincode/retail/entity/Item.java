@@ -2,7 +2,7 @@
  * Representation of a single merchandise
  * @version 1.0-SNAPSHOT
  * @author Exolade
- */
+ *//*
 package com.exolade.bizincode.retail.entity;
 
 import javax.persistence.Column;
@@ -23,35 +23,25 @@ import com.exolade.bizincode.retail.misc.MerchandiseType;
 @Table(name = "Merchandise")
 @NamedQueries({
     @NamedQuery(name="Merchandise.findAll",
-                query="SELECT m FROM Merchandise m"),
+                query="SELECT m FROM Item m"),
     @NamedQuery(name="Merchandise.findById",
-                query="SELECT m FROM Merchandise m WHERE m.id = :id"),
+                query="SELECT m FROM Item m WHERE m.id = :id"),
     @NamedQuery(name="Merchandise.findByName",
-                query="SELECT m FROM Merchandise m WHERE m.name = :name"),
+                query="SELECT m FROM Item m WHERE m.name = :name"),
     @NamedQuery(name="Merchandise.findByType",
-                query="SELECT m FROM Merchandise m WHERE m.type = :type"),
+                query="SELECT m FROM Item m WHERE m.type = :type"),
 })
-public class Merchandise{
-	private int id;
+public class Item extends Merchandise{
 	private String name;
 	private double price;
 	private MerchandiseType type;
-	//number of merchandise available for sell
-	private int quantity;
 	
-	public Merchandise() { }
+	public Item() { }
 	
-	public Merchandise(String name, double price, MerchandiseType type, int num) {
+	public Item(String name, double price, MerchandiseType type) {
 		this.name = name;
 		this.price = price;
 		this.type = type;
-		this.quantity = num;
-	}
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ITEM_ID")
-	public int getId() {
-		return id;
 	}
 	
 	@Column(name = "NAME")
@@ -64,11 +54,6 @@ public class Merchandise{
 		return price;
 	}
 	
-	@Column(name = "QUANTITY")
-	public int getQuantity() {
-		return quantity;
-	}
-	
 	@Column(name = "ITEM_TYPE")
 	@Enumerated(EnumType.STRING)
 	public MerchandiseType getType() {
@@ -77,14 +62,6 @@ public class Merchandise{
 	
 	public void setType(MerchandiseType type) {
 		this.type = type;
-	}
-	
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	
-	public void setId(int item_id) {
-		this.id = item_id;
 	}
 	
 	public void setName(String name) {
@@ -96,3 +73,4 @@ public class Merchandise{
 	}
 	
 } //class
+*/

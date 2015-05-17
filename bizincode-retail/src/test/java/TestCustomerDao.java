@@ -14,7 +14,7 @@ import com.exolade.bizincode.retail.dao.CustomerDaoImpl;
 import com.exolade.bizincode.retail.dao.EmployeeDaoImpl;
 import com.exolade.bizincode.retail.entity.Customer;
 import com.exolade.bizincode.retail.entity.Employee;
-import com.exolade.bizincode.retail.entity.PurchaseProfile;
+import com.exolade.bizincode.retail.entity.PurchaseHistory;
 
 
 public class TestCustomerDao {
@@ -32,9 +32,9 @@ public class TestCustomerDao {
 		Customer cust1 = new Customer(25, 142456789, "Johanna", "543 Peach St.", 'f');
 		Customer cust2 = new Customer(42, 132486789, "Lora", "443 Peach St.", 'f');
 		Customer cust3 = new Customer(48, 132456709, "George", "343 Peach St.", 'm');
-		PurchaseProfile pf1 = new PurchaseProfile();
-		PurchaseProfile pf2 = new PurchaseProfile();
-		PurchaseProfile pf3 = new PurchaseProfile();
+		PurchaseHistory pf1 = new PurchaseHistory();
+		PurchaseHistory pf2 = new PurchaseHistory();
+		PurchaseHistory pf3 = new PurchaseHistory();
 		
 		cust1.setProfile(pf1);
 		pf1.setCustomer(cust1);

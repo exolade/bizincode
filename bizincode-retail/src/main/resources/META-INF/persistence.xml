@@ -12,8 +12,13 @@
 		<class>com.exolade.bizincode.retail.entity.Employee</class>
 		<class>com.exolade.bizincode.retail.entity.Customer</class>
 		<class>com.exolade.bizincode.retail.entity.EmployeeDetail</class>
-		<class>com.exolade.bizincode.retail.entity.PurchaseProfile</class>
-		<class>com.exolade.bizincode.retail.entity.Merchandise</class>
+		<class>com.exolade.bizincode.retail.entity.PurchaseHistory</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Food</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Beverage</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Book</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Magazine</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Newspaper</class>
+		<class>com.exolade.bizincode.retail.entity.merchandises.Product</class>
 	 
 		<properties>
 		 <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

@@ -1,5 +1,5 @@
 /**
- * This class will perform CRUD operations for Merchandise.class using EntityManagerFactory that
+ * This class will perform CRUD operations for Newspaper.class using EntityManagerFactory that
  * is being passed in at initialization. 
  * 
  * @version 1.0-SNAPSHOT
@@ -7,8 +7,8 @@
  */
 package com.exolade.bizincode.retail.dao;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,14 +17,13 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import com.exolade.bizincode.retail.EmfProvider;
-import com.exolade.bizincode.retail.entity.Merchandise;
-import com.exolade.bizincode.retail.misc.MerchandiseType;
+import com.exolade.bizincode.retail.entity.merchandises.Merchandise;
 
-public class MerchandiseDaoImpl implements AbstractDao{
+public class NewspaperDaoImpl implements AbstractDao{
 	private EntityManagerFactory emf;
 	private EntityManager em;
 
-	public MerchandiseDaoImpl(EmfProvider provider) {
+	public NewspaperDaoImpl(EmfProvider provider) {
 		try {
 			emf = provider.getEntityManagerFactory();
 			em = emf.createEntityManager();
@@ -78,7 +77,7 @@ public class MerchandiseDaoImpl implements AbstractDao{
 	
 	@Override
 	public List<Object> getAll() {
-		Query q = em.createNamedQuery("Merchandise.findAll");
+		Query q = em.createNamedQuery("Newspaper.findAll");
 		try {
 			return q.getResultList();
 		} catch (NoResultException e) {
@@ -97,9 +96,9 @@ public class MerchandiseDaoImpl implements AbstractDao{
 		}
 	}
 	
-	public List<Object> getByType(MerchandiseType type) {
-		Query q = em.createNamedQuery("Merchandise.findByType");
-		q.setParameter("type", type);
+	public List<Object> getBySellBy(Date date) {
+		Query q = em.createNamedQuery("Newspaper.findBySellBy");
+		q.setParameter("type", date);
 		try {
 			return q.getResultList();
 		} catch (NoResultException e) {
@@ -108,7 +107,7 @@ public class MerchandiseDaoImpl implements AbstractDao{
 	}
 	
 	public List<Object> getByName(String name) {
-		Query q = em.createNamedQuery("Merchandise.findByName");
+		Query q = em.createNamedQuery("Newspaper.findByName");
 		q.setParameter("name", name);
 		try {
 			return q.getResultList();
